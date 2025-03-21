@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        
+        .app-logo {
+            width: 120px;
+            height: 120px;
+            background-color: #007AFF;
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content flex flex-col justify-center items-center p-8 bg-white">
+            <div class="app-logo">
+                <i class="fas fa-mug-hot text-white text-5xl"></i>
+            </div>
+            
+            <h1 class="text-3xl font-bold mb-2 text-center">智能奶茶机运维</h1>
+            <p class="text-gray-500 mb-10 text-center">高效管理您的智能奶茶设备</p>
+            
+            <form class="w-full">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="username">
+                        用户名
+                    </label>
+                    <input class="form-input" id="username" type="text" placeholder="请输入用户名">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-medium mb-2" for="password">
+                        密码
+                    </label>
+                    <input class="form-input" id="password" type="password" placeholder="请输入密码">
+                    <div class="flex justify-end">
+                        <a href="#" class="text-sm text-blue-500 hover:text-blue-700">忘记密码？</a>
+                    </div>
+                </div>
+                
+                <button class="form-button btn-primary mb-4" type="button" onclick="location.href='dashboard.html'">
+                    登录
+                </button>
+                
+                <div class="flex justify-center items-center">
+                    <span class="text-gray-500 text-sm">还没有账号？</span>
+                    <a href="#" class="text-blue-500 text-sm ml-1 hover:text-blue-700">联系管理员</a>
+                </div>
+            </form>
+            
+            <div class="mt-12 flex flex-col items-center">
+                <p class="text-gray-500 text-sm mb-2">其他登录方式</p>
+                <div class="flex space-x-6">
+                    <button class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i class="fab fa-weixin text-green-500 text-xl"></i>
+                    </button>
+                    <button class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-fingerprint text-blue-500 text-xl"></i>
+                    </button>
+                    <button class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                        <i class="fas fa-qrcode text-purple-500 text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

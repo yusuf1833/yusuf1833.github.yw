@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运维人员管理 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        
+        .staff-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            margin-right: 12px;
+            overflow: hidden;
+        }
+        
+        .staff-card {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .staff-info {
+            flex: 1;
+        }
+        
+        .badge-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-active {
+            background-color: #E7F7EE;
+            color: #0C9C4C;
+        }
+        
+        .badge-idle {
+            background-color: #EBF5FF;
+            color: #3B82F6;
+        }
+        
+        .badge-busy {
+            background-color: #FFF8E6;
+            color: #D39000;
+        }
+        
+        .skill-badge {
+            display: inline-block;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            background-color: #F3F4F6;
+            color: #6B7280;
+            margin-right: 4px;
+        }
+        
+        .staff-rating {
+            display: flex;
+            align-items: center;
+        }
+        
+        .star-filled {
+            color: #FBBF24;
+        }
+        
+        .star-empty {
+            color: #E5E7EB;
+        }
+        
+        .tab-button {
+            font-weight: 500;
+            color: #6B7280;
+            padding: 0.75rem 0;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: #3B82F6;
+            border-bottom: 2px solid #3B82F6;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="bg-white p-4 shadow-sm">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                    <a href="maintenance.html" class="mr-3">
+                        <i class="fas fa-chevron-left text-gray-600"></i>
+                    </a>
+                    <h1 class="text-xl font-bold">运维人员管理</h1>
+                </div>
+                <button class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-plus text-gray-600"></i>
+                </button>
+            </div>
+            
+            <!-- 搜索栏 -->
+            <div class="relative mb-4">
+                <input type="text" class="w-full p-2 pl-10 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500" placeholder="搜索人员...">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+            
+            <!-- 标签切换 -->
+            <div class="flex">
+                <div class="w-1/3 tab-button active">全部人员</div>
+                <div class="w-1/3 tab-button">当前工作</div>
+                <div class="w-1/3 tab-button">绩效分析</div>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 人员状态概览 -->
+            <div class="mb-5">
+                <h2 class="text-lg font-semibold mb-3">人员状态</h2>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-green-100">
+                            <i class="fas fa-user-check text-green-500"></i>
+                        </div>
+                        <div class="stat-card-value text-green-500">4</div>
+                        <p class="text-gray-600 text-sm">工作中</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-blue-100">
+                            <i class="fas fa-user-clock text-blue-500"></i>
+                        </div>
+                        <div class="stat-card-value text-blue-500">2</div>
+                        <p class="text-gray-600 text-sm">待命</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-yellow-100">
+                            <i class="fas fa-user-slash text-yellow-500"></i>
+                        </div>
+                        <div class="stat-card-value text-yellow-500">1</div>
+                        <p class="text-gray-600 text-sm">休假</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 人员列表 -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">运维人员（7）</h2>
+                    <div class="text-sm text-gray-500">
+                        <i class="fas fa-sort-amount-down mr-1"></i> 按工作状态
+                    </div>
+                </div>
+                
+                <!-- 工程师1 -->
+                <div class="staff-card">
+                    <div class="staff-avatar">
+                        <img src="https://via.placeholder.com/50x50" alt="李工程师">
+                    </div>
+                    <div class="staff-info">
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <div class="flex items-center">
+                                    <h3 class="font-semibold mr-2">李工程师</h3>
+                                    <span class="badge-status badge-active">工作中</span>
+                                </div>
+                                <p class="text-xs text-gray-500">高级维修工程师</p>
+                            </div>
+                            <div class="staff-rating">
+                                <span class="text-sm mr-1">4.9</span>
+                                <i class="fas fa-star text-xs star-filled"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap mt-2">
+                            <span class="skill-badge">设备维修</span>
+                            <span class="skill-badge">系统调试</span>
+                            <span class="skill-badge">培训</span>
+                        </div>
+                        
+                        <div class="flex justify-between mt-2 text-xs">
+                            <span class="text-gray-500">当前任务：奶茶机 #A12345 蒸汽故障</span>
+                            <span class="text-blue-500">详情</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工程师2 -->
+                <div class="staff-card">
+                    <div class="staff-avatar">
+                        <img src="https://via.placeholder.com/50x50" alt="王工程师">
+                    </div>
+                    <div class="staff-info">
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <div class="flex items-center">
+                                    <h3 class="font-semibold mr-2">王工程师</h3>
+                                    <span class="badge-status badge-busy">繁忙</span>
+                                </div>
+                                <p class="text-xs text-gray-500">维修工程师</p>
+                            </div>
+                            <div class="staff-rating">
+                                <span class="text-sm mr-1">4.7</span>
+                                <i class="fas fa-star text-xs star-filled"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap mt-2">
+                            <span class="skill-badge">设备维修</span>
+                            <span class="skill-badge">安装调试</span>
+                        </div>
+                        
+                        <div class="flex justify-between mt-2 text-xs">
+                            <span class="text-gray-500">当前任务：批量设备日常维护</span>
+                            <span class="text-blue-500">详情</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工程师3 -->
+                <div class="staff-card">
+                    <div class="staff-avatar">
+                        <img src="https://via.placeholder.com/50x50" alt="张工程师">
+                    </div>
+                    <div class="staff-info">
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <div class="flex items-center">
+                                    <h3 class="font-semibold mr-2">张工程师</h3>
+                                    <span class="badge-status badge-active">工作中</span>
+                                </div>
+                                <p class="text-xs text-gray-500">维修工程师</p>
+                            </div>
+                            <div class="staff-rating">
+                                <span class="text-sm mr-1">4.8</span>
+                                <i class="fas fa-star text-xs star-filled"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap mt-2">
+                            <span class="skill-badge">设备维修</span>
+                            <span class="skill-badge">系统调试</span>
+                        </div>
+                        
+                        <div class="flex justify-between mt-2 text-xs">
+                            <span class="text-gray-500">当前任务：奶茶机 #C45678 水泵更换</span>
+                            <span class="text-blue-500">详情</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工程师4 -->
+                <div class="staff-card">
+                    <div class="staff-avatar">
+                        <img src="https://via.placeholder.com/50x50" alt="刘工程师">
+                    </div>
+                    <div class="staff-info">
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <div class="flex items-center">
+                                    <h3 class="font-semibold mr-2">刘工程师</h3>
+                                    <span class="badge-status badge-idle">待命</span>
+                                </div>
+                                <p class="text-xs text-gray-500">助理工程师</p>
+                            </div>
+                            <div class="staff-rating">
+                                <span class="text-sm mr-1">4.5</span>
+                                <i class="fas fa-star text-xs star-filled"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap mt-2">
+                            <span class="skill-badge">基础维修</span>
+                            <span class="skill-badge">库存管理</span>
+                        </div>
+                        
+                        <div class="flex justify-between mt-2 text-xs">
+                            <span class="text-gray-500">无当前任务</span>
+                            <button class="text-blue-500">分配任务</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工程师5 -->
+                <div class="staff-card">
+                    <div class="staff-avatar">
+                        <img src="https://via.placeholder.com/50x50" alt="赵工程师">
+                    </div>
+                    <div class="staff-info">
+                        <div class="flex justify-between items-start mb-1">
+                            <div>
+                                <div class="flex items-center">
+                                    <h3 class="font-semibold mr-2">赵工程师</h3>
+                                    <span class="badge-status badge-active">工作中</span>
+                                </div>
+                                <p class="text-xs text-gray-500">高级维修工程师</p>
+                            </div>
+                            <div class="staff-rating">
+                                <span class="text-sm mr-1">4.9</span>
+                                <i class="fas fa-star text-xs star-filled"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap mt-2">
+                            <span class="skill-badge">设备维修</span>
+                            <span class="skill-badge">紧急故障</span>
+                            <span class="skill-badge">研发</span>
+                        </div>
+                        
+                        <div class="flex justify-between mt-2 text-xs">
+                            <span class="text-gray-500">当前任务：远程诊断奶茶机 #E56789</span>
+                            <span class="text-blue-500">详情</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 工作分配提示 -->
+            <div class="mb-5 bg-blue-50 rounded-lg p-4 text-blue-800">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                    <div>
+                        <h3 class="font-medium mb-1">工作分配建议</h3>
+                        <p class="text-sm">目前有2位工程师处于待命状态，可以分配今日的4项设备例行检查任务。</p>
+                        <button class="bg-blue-500 text-white text-sm px-4 py-1 rounded-md mt-2">一键分配</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 近期绩效 -->
+            <div class="mb-5">
+                <h2 class="text-lg font-semibold mb-3">近期绩效</h2>
+                <div class="bg-white rounded-lg overflow-hidden p-4">
+                    <div class="flex justify-between mb-4">
+                        <div>
+                            <p class="text-sm text-gray-500">本周完成任务</p>
+                            <p class="text-2xl font-bold">32项</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">平均处理时间</p>
+                            <p class="text-2xl font-bold">1.5小时</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>故障修复率</span>
+                                <span>98%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-high" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>客户满意度</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-high" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>准时完成率</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-high" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="bottom-nav">
+            <a href="dashboard.html" class="flex flex-col items-center">
+                <i class="fas fa-home text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">首页</span>
+            </a>
+            
+            <a href="device_list.html" class="flex flex-col items-center">
+                <i class="fas fa-coffee text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">设备</span>
+            </a>
+            
+            <a href="maintenance.html" class="flex flex-col items-center">
+                <i class="fas fa-tools text-blue-500 text-xl"></i>
+                <span class="text-xs mt-1 text-blue-500">运维</span>
+            </a>
+            
+            <a href="messages.html" class="flex flex-col items-center">
+                <i class="fas fa-bell text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">消息</span>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有标签页的active类
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 为当前点击的标签添加active类
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

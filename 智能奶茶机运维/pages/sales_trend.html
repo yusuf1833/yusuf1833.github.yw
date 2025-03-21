@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>销售趋势 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        
+        .chart-container {
+            height: 200px;
+            position: relative;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .trend-line-container {
+            width: 100%;
+            height: 120px;
+            position: relative;
+            padding-top: 20px;
+        }
+        
+        .trend-line {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #E5E7EB;
+        }
+        
+        .trend-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #3B82F6;
+            position: absolute;
+            bottom: 25px;
+            transform: translateY(-50%);
+        }
+        
+        .trend-connection {
+            position: absolute;
+            height: 2px;
+            background-color: #3B82F6;
+            bottom: 25px;
+            transform: translateY(-1px);
+        }
+        
+        .trend-label {
+            position: absolute;
+            bottom: 0;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #6B7280;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .trend-value {
+            position: absolute;
+            font-size: 10px;
+            color: #1F2937;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 30px;
+        }
+        
+        .horizontal-bar {
+            width: 100%;
+            height: 12px;
+            background-color: #E5E7EB;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .horizontal-fill {
+            height: 100%;
+            background-color: #3B82F6;
+            border-radius: 6px;
+        }
+        
+        .vertical-bars-container {
+            display: flex;
+            align-items: flex-end;
+            height: 150px;
+            padding-top: 20px;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .vertical-bar-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30px;
+        }
+        
+        .vertical-bar {
+            width: 20px;
+            background-color: #3B82F6;
+            border-radius: 3px 3px 0 0;
+        }
+        
+        .vertical-bar-label {
+            font-size: 10px;
+            color: #6B7280;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .tab-button {
+            font-weight: 500;
+            color: #6B7280;
+            padding: 0.75rem 0;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: #3B82F6;
+            border-bottom: 2px solid #3B82F6;
+        }
+
+        .time-segment {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background-color: white;
+            margin-bottom: 8px;
+        }
+        
+        .time-segment-active {
+            background-color: #EBF5FF;
+            border-left: 3px solid #3B82F6;
+        }
+        
+        .beverage-segment {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: white;
+            margin-bottom: 8px;
+        }
+        
+        .circle-progress {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin-right: 15px;
+        }
+        
+        .circle-bg {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #F3F4F6;
+            position: absolute;
+        }
+        
+        .circle-fill {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(#3B82F6 0% calc(var(--percentage) * 3.6deg), #F3F4F6 calc(var(--percentage) * 3.6deg) 360deg);
+            position: absolute;
+        }
+        
+        .circle-center {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .location-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .location-item {
+            display: flex;
+            align-items: center;
+            width: 50%;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        
+        .location-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="bg-white p-4 shadow-sm">
+            <div class="flex items-center mb-3">
+                <a href="statistics.html" class="mr-3">
+                    <i class="fas fa-chevron-left text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-bold">销售趋势</h1>
+            </div>
+            
+            <!-- 数据时间范围选择 -->
+            <div class="flex space-x-2 mb-3">
+                <button class="flex-1 py-2 rounded-lg bg-blue-500 text-white text-sm font-medium">
+                    本周
+                </button>
+                <button class="flex-1 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium">
+                    本月
+                </button>
+                <button class="flex-1 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium">
+                    季度
+                </button>
+                <button class="flex-1 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium">
+                    自定义
+                </button>
+            </div>
+            
+            <!-- 标签切换 -->
+            <div class="flex">
+                <div class="w-1/3 tab-button active">销售额</div>
+                <div class="w-1/3 tab-button">用户分析</div>
+                <div class="w-1/3 tab-button">原料消耗</div>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 销售总览 -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">销售总览</h2>
+                    <div class="flex items-center">
+                        <span class="text-sm text-green-500 mr-1">+12.4%</span>
+                        <span class="text-xs text-gray-500">同比</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-blue-100">
+                            <i class="fas fa-yen-sign text-blue-500"></i>
+                        </div>
+                        <div class="stat-card-value text-blue-500">¥15,286</div>
+                        <p class="text-gray-600 text-sm">本周销售额</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-purple-100">
+                            <i class="fas fa-mug-hot text-purple-500"></i>
+                        </div>
+                        <div class="stat-card-value text-purple-500">523</div>
+                        <p class="text-gray-600 text-sm">本周销售量</p>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-placeholder">
+                        <div class="trend-line-container">
+                            <div class="trend-line"></div>
+                            
+                            <!-- 趋势点和连接线 -->
+                            <div class="trend-dot" style="left: 10%; bottom: 55px;"></div>
+                            <div class="trend-connection" style="left: 10%; width: 15%; height: 20px; transform: rotate(25deg); transform-origin: left bottom;"></div>
+                            
+                            <div class="trend-dot" style="left: 25%; bottom: 75px;"></div>
+                            <div class="trend-connection" style="left: 25%; width: 15%; height: 5px; transform: rotate(-5deg); transform-origin: left bottom;"></div>
+                            
+                            <div class="trend-dot" style="left: 40%; bottom: 70px;"></div>
+                            <div class="trend-connection" style="left: 40%; width: 15%; height: 30px; transform: rotate(30deg); transform-origin: left bottom;"></div>
+                            
+                            <div class="trend-dot" style="left: 55%; bottom: 100px;"></div>
+                            <div class="trend-connection" style="left: 55%; width: 15%; height: 10px; transform: rotate(-10deg); transform-origin: left bottom;"></div>
+                            
+                            <div class="trend-dot" style="left: 70%; bottom: 90px;"></div>
+                            <div class="trend-connection" style="left: 70%; width: 15%; height: 15px; transform: rotate(15deg); transform-origin: left bottom;"></div>
+                            
+                            <div class="trend-dot" style="left: 85%; bottom: 105px;"></div>
+                            
+                            <!-- 日期标签 -->
+                            <div class="trend-label" style="left: 10%;">周一</div>
+                            <div class="trend-label" style="left: 25%;">周二</div>
+                            <div class="trend-label" style="left: 40%;">周三</div>
+                            <div class="trend-label" style="left: 55%;">周四</div>
+                            <div class="trend-label" style="left: 70%;">周五</div>
+                            <div class="trend-label" style="left: 85%;">周六</div>
+                            
+                            <!-- 数值标签 -->
+                            <div class="trend-value" style="left: 10%; bottom: 60px;">1.8k</div>
+                            <div class="trend-value" style="left: 25%; bottom: 80px;">2.3k</div>
+                            <div class="trend-value" style="left: 40%; bottom: 75px;">2.1k</div>
+                            <div class="trend-value" style="left: 55%; bottom: 105px;">3.4k</div>
+                            <div class="trend-value" style="left: 70%; bottom: 95px;">2.9k</div>
+                            <div class="trend-value" style="left: 85%; bottom: 110px;">3.6k</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 时段分析 -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">时段分析</h2>
+                    <div class="flex items-center">
+                        <span class="text-xs text-gray-500">单位：杯</span>
+                    </div>
+                </div>
+                
+                <div class="time-segment time-segment-active">
+                    <div>
+                        <h3 class="font-medium">上午 (6:00-12:00)</h3>
+                        <p class="text-sm text-gray-500">主要客群：上班族</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold text-blue-500">182杯</p>
+                        <p class="text-xs text-gray-500">34.8%</p>
+                    </div>
+                </div>
+                
+                <div class="time-segment">
+                    <div>
+                        <h3 class="font-medium">中午 (12:00-14:00)</h3>
+                        <p class="text-sm text-gray-500">主要客群：午休人群</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold">98杯</p>
+                        <p class="text-xs text-gray-500">18.7%</p>
+                    </div>
+                </div>
+                
+                <div class="time-segment">
+                    <div>
+                        <h3 class="font-medium">下午 (14:00-18:00)</h3>
+                        <p class="text-sm text-gray-500">主要客群：学生、上班族</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold">156杯</p>
+                        <p class="text-xs text-gray-500">29.8%</p>
+                    </div>
+                </div>
+                
+                <div class="time-segment">
+                    <div>
+                        <h3 class="font-medium">晚上 (18:00-22:00)</h3>
+                        <p class="text-sm text-gray-500">主要客群：学生、下班人群</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold">87杯</p>
+                        <p class="text-xs text-gray-500">16.6%</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 品类分析 -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">品类分析</h2>
+                    <a href="#" class="text-blue-500 text-sm">详细数据</a>
+                </div>
+                
+                <div class="beverage-segment">
+                    <div class="circle-progress">
+                        <div class="circle-bg"></div>
+                        <div class="circle-fill" style="--percentage: 65;"></div>
+                        <div class="circle-center">65%</div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">奶茶类</h3>
+                        <p class="text-sm text-gray-500 mb-2">340杯 / ¥9,860</p>
+                        <div class="horizontal-bar">
+                            <div class="horizontal-fill" style="width: 65%;"></div>
+                        </div>
+                        <div class="text-xs text-gray-500">同比增长 18%</div>
+                    </div>
+                </div>
+                
+                <div class="beverage-segment">
+                    <div class="circle-progress">
+                        <div class="circle-bg"></div>
+                        <div class="circle-fill" style="--percentage: 18;"></div>
+                        <div class="circle-center">18%</div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">果茶类</h3>
+                        <p class="text-sm text-gray-500 mb-2">94杯 / ¥2,726</p>
+                        <div class="horizontal-bar">
+                            <div class="horizontal-fill" style="width: 18%;"></div>
+                        </div>
+                        <div class="text-xs text-gray-500">同比增长 7%</div>
+                    </div>
+                </div>
+                
+                <div class="beverage-segment">
+                    <div class="circle-progress">
+                        <div class="circle-bg"></div>
+                        <div class="circle-fill" style="--percentage: 12;"></div>
+                        <div class="circle-center">12%</div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">咖啡类</h3>
+                        <p class="text-sm text-gray-500 mb-2">63杯 / ¥1,890</p>
+                        <div class="horizontal-bar">
+                            <div class="horizontal-fill" style="width: 12%;"></div>
+                        </div>
+                        <div class="text-xs text-gray-500">同比增长 15%</div>
+                    </div>
+                </div>
+                
+                <div class="beverage-segment">
+                    <div class="circle-progress">
+                        <div class="circle-bg"></div>
+                        <div class="circle-fill" style="--percentage: 5;"></div>
+                        <div class="circle-center">5%</div>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-medium">其他</h3>
+                        <p class="text-sm text-gray-500 mb-2">26杯 / ¥810</p>
+                        <div class="horizontal-bar">
+                            <div class="horizontal-fill" style="width: 5%;"></div>
+                        </div>
+                        <div class="text-xs text-gray-500">同比增长 3%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 区域分布 -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">区域分布</h2>
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-red-500 mr-1"></i>
+                        <span class="text-xs text-gray-500">按位置</span>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-placeholder flex flex-col">
+                        <div class="vertical-bars-container">
+                            <div class="vertical-bar-wrapper">
+                                <div class="vertical-bar" style="height: 100px; background-color: #3B82F6;"></div>
+                                <div class="vertical-bar-label">一楼<br>前厅</div>
+                            </div>
+                            <div class="vertical-bar-wrapper">
+                                <div class="vertical-bar" style="height: 70px; background-color: #10B981;"></div>
+                                <div class="vertical-bar-label">一楼<br>后厨</div>
+                            </div>
+                            <div class="vertical-bar-wrapper">
+                                <div class="vertical-bar" style="height: 120px; background-color: #F59E0B;"></div>
+                                <div class="vertical-bar-label">二楼<br>工作区</div>
+                            </div>
+                            <div class="vertical-bar-wrapper">
+                                <div class="vertical-bar" style="height: 50px; background-color: #EF4444;"></div>
+                                <div class="vertical-bar-label">二楼<br>会议区</div>
+                            </div>
+                            <div class="vertical-bar-wrapper">
+                                <div class="vertical-bar" style="height: 85px; background-color: #8B5CF6;"></div>
+                                <div class="vertical-bar-label">一楼<br>休息区</div>
+                            </div>
+                        </div>
+                        
+                        <div class="location-legend">
+                            <div class="location-item">
+                                <div class="location-color" style="background-color: #3B82F6;"></div>
+                                <span>一楼前厅: 145杯</span>
+                            </div>
+                            <div class="location-item">
+                                <div class="location-color" style="background-color: #10B981;"></div>
+                                <span>一楼后厨: 87杯</span>
+                            </div>
+                            <div class="location-item">
+                                <div class="location-color" style="background-color: #F59E0B;"></div>
+                                <span>二楼工作区: 175杯</span>
+                            </div>
+                            <div class="location-item">
+                                <div class="location-color" style="background-color: #EF4444;"></div>
+                                <span>二楼会议区: 56杯</span>
+                            </div>
+                            <div class="location-item">
+                                <div class="location-color" style="background-color: #8B5CF6;"></div>
+                                <span>一楼休息区: 90杯</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 增长趋势 -->
+            <div class="mb-5">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">月度增长趋势</h2>
+                    <div class="flex items-center">
+                        <span class="text-xs text-gray-500">最近6个月</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium">2023年10月</span>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium mr-2">2,456杯</span>
+                            <span class="text-xs text-green-500">+8.2%</span>
+                        </div>
+                    </div>
+                    <div class="horizontal-bar mb-4">
+                        <div class="horizontal-fill" style="width: 82%;"></div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium">2023年11月</span>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium mr-2">2,187杯</span>
+                            <span class="text-xs text-red-500">-11.0%</span>
+                        </div>
+                    </div>
+                    <div class="horizontal-bar mb-4">
+                        <div class="horizontal-fill" style="width: 73%;"></div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium">2023年12月</span>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium mr-2">2,753杯</span>
+                            <span class="text-xs text-green-500">+25.9%</span>
+                        </div>
+                    </div>
+                    <div class="horizontal-bar mb-4">
+                        <div class="horizontal-fill" style="width: 92%;"></div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium">2024年1月</span>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium mr-2">2,354杯</span>
+                            <span class="text-xs text-red-500">-14.5%</span>
+                        </div>
+                    </div>
+                    <div class="horizontal-bar mb-4">
+                        <div class="horizontal-fill" style="width: 78%;"></div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium">2024年2月</span>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium mr-2">2,198杯</span>
+                            <span class="text-xs text-red-500">-6.6%</span>
+                        </div>
+                    </div>
+                    <div class="horizontal-bar mb-4">
+                        <div class="horizontal-fill" style="width: 73%;"></div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium">2024年3月</span>
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium mr-2">3,000杯</span>
+                            <span class="text-xs text-green-500">+36.5%</span>
+                        </div>
+                    </div>
+                    <div class="horizontal-bar">
+                        <div class="horizontal-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 导出数据按钮 -->
+            <div class="flex space-x-3 mb-6">
+                <button class="w-1/2 py-3 bg-blue-500 text-white rounded-lg text-sm font-medium">
+                    <i class="fas fa-download mr-2"></i> 导出报表
+                </button>
+                <button class="w-1/2 py-3 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium">
+                    <i class="fas fa-share-alt mr-2"></i> 分享数据
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 简单的标签切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有标签页的active类
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // 为当前点击的标签添加active类
+                    this.classList.add('active');
+                });
+            });
+            
+            // 时段分析点击事件
+            const timeSegments = document.querySelectorAll('.time-segment');
+            timeSegments.forEach(segment => {
+                segment.addEventListener('click', function() {
+                    timeSegments.forEach(seg => seg.classList.remove('time-segment-active'));
+                    this.classList.add('time-segment-active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

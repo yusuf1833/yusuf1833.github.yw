@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户信息 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: white;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .badge-role {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #EBF5FF;
+            color: #3B82F6;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E5E7EB;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #3B82F6;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        .permission-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .permission-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="bg-white p-4 shadow-sm">
+            <div class="flex items-center">
+                <a href="dashboard.html" class="mr-3">
+                    <i class="fas fa-chevron-left text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-bold">个人信息</h1>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 用户基本信息 -->
+            <div class="bg-white rounded-lg p-5 mb-5 shadow-sm">
+                <div class="flex items-center">
+                    <div class="avatar mr-4">
+                        <img src="https://via.placeholder.com/80x80" alt="用户头像">
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold mb-1">张维修</h2>
+                        <div class="flex items-center mb-1">
+                            <span class="badge-role mr-2">运维主管</span>
+                            <span class="text-sm text-gray-500">ID: 10086</span>
+                        </div>
+                        <p class="text-sm text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-1"></i> 上海市浦东新区
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-3 mt-5 text-center">
+                    <div>
+                        <p class="text-xl font-bold text-gray-800">16</p>
+                        <p class="text-sm text-gray-500">管理设备</p>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold text-gray-800">42</p>
+                        <p class="text-sm text-gray-500">处理故障</p>
+                    </div>
+                    <div>
+                        <p class="text-xl font-bold text-gray-800">98%</p>
+                        <p class="text-sm text-gray-500">满意度</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 账户设置 -->
+            <div class="mb-5">
+                <h2 class="text-lg font-semibold px-2 mb-2">账户设置</h2>
+                
+                <div class="bg-white rounded-lg overflow-hidden">
+                    <div class="setting-item">
+                        <div class="flex items-center">
+                            <div class="setting-icon bg-blue-100">
+                                <i class="fas fa-user text-blue-500"></i>
+                            </div>
+                            <span>编辑个人资料</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="flex items-center">
+                            <div class="setting-icon bg-green-100">
+                                <i class="fas fa-key text-green-500"></i>
+                            </div>
+                            <span>修改密码</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="flex items-center">
+                            <div class="setting-icon bg-purple-100">
+                                <i class="fas fa-shield-alt text-purple-500"></i>
+                            </div>
+                            <span>账户安全</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 权限管理 -->
+            <div class="mb-5">
+                <h2 class="text-lg font-semibold px-2 mb-2">权限管理</h2>
+                
+                <div class="bg-white rounded-lg overflow-hidden">
+                    <div class="permission-item">
+                        <div class="flex-1">
+                            <p class="font-medium">设备操作权限</p>
+                            <p class="text-xs text-gray-500">允许远程控制和管理所有设备</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <div class="flex-1">
+                            <p class="font-medium">人员管理权限</p>
+                            <p class="text-xs text-gray-500">允许添加和管理运维人员</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <div class="flex-1">
+                            <p class="font-medium">数据分析权限</p>
+                            <p class="text-xs text-gray-500">允许查看和导出所有数据报表</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="permission-item">
+                        <div class="flex-1">
+                            <p class="font-medium">库存管理权限</p>
+                            <p class="text-xs text-gray-500">允许查看和管理原料库存</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 通知设置 -->
+            <div class="mb-5">
+                <h2 class="text-lg font-semibold px-2 mb-2">通知设置</h2>
+                
+                <div class="bg-white rounded-lg overflow-hidden">
+                    <div class="setting-item">
+                        <div class="flex-1">
+                            <p class="font-medium">设备故障通知</p>
+                            <p class="text-xs text-gray-500">接收设备故障和异常报警</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="flex-1">
+                            <p class="font-medium">库存预警通知</p>
+                            <p class="text-xs text-gray-500">接收原料库存不足预警</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="flex-1">
+                            <p class="font-medium">系统更新通知</p>
+                            <p class="text-xs text-gray-500">接收系统和应用更新提醒</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="flex-1">
+                            <p class="font-medium">推送通知方式</p>
+                            <p class="text-xs text-gray-500">选择接收通知的方式</p>
+                        </div>
+                        <div class="text-sm text-gray-500 flex items-center">
+                            <span class="mr-2">应用内+短信</span>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 系统信息 -->
+            <div class="mb-5">
+                <h2 class="text-lg font-semibold px-2 mb-2">关于系统</h2>
+                
+                <div class="bg-white rounded-lg overflow-hidden">
+                    <div class="setting-item">
+                        <div class="flex items-center">
+                            <div class="setting-icon bg-gray-100">
+                                <i class="fas fa-info-circle text-gray-500"></i>
+                            </div>
+                            <span>系统版本</span>
+                        </div>
+                        <span class="text-sm text-gray-500">v2.4.1</span>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="flex items-center">
+                            <div class="setting-icon bg-gray-100">
+                                <i class="fas fa-file-alt text-gray-500"></i>
+                            </div>
+                            <span>使用条款</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="flex items-center">
+                            <div class="setting-icon bg-gray-100">
+                                <i class="fas fa-question-circle text-gray-500"></i>
+                            </div>
+                            <span>帮助与支持</span>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 退出登录按钮 -->
+            <button class="w-full py-3 bg-red-100 text-red-600 rounded-lg text-center font-medium mb-6" onclick="location.href='login.html'">
+                退出登录
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // 开关按钮点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const switches = document.querySelectorAll('.switch input');
+            
+            switches.forEach(switchInput => {
+                switchInput.addEventListener('change', function() {
+                    console.log('开关状态改变:', this.checked);
+                    // 这里可以添加实际的权限或通知设置逻辑
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

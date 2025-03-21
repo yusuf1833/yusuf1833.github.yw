@@ -1,0 +1,6 @@
+/* 
+引入Tailwind CSS CDN
+这里我们使用CDN引入Tailwind CSS以简化开发，在实际项目中可以考虑使用npm安装并优化构建
+*/
+
+@import 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css'; 

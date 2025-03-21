@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能奶茶机运维App原型</title>
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #333;
+        }
+        .page-description {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            text-align: center;
+            color: #666;
+            line-height: 1.6;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            color: #333;
+        }
+        .iframe-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #444;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <h1>智能奶茶机运维App原型</h1>
+    
+    <p class="page-description">
+        本页面展示了智能奶茶机运维App的所有原型界面。每个界面都模拟了iPhone 15 Pro的尺寸和iOS的设计风格，包含状态栏和导航栏等元素，使原型更接近真实App的体验。
+    </p>
+    
+    <h2 class="section-title">主要功能界面</h2>
+    
+    <div class="prototype-container">
+        <!-- 登录界面 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">登录界面</p>
+            <iframe src="pages/login.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 主控制面板 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">主控制面板</p>
+            <iframe src="pages/dashboard.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 设备列表 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">设备列表</p>
+            <iframe src="pages/device_list.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 设备详情 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">设备详情</p>
+            <iframe src="pages/device_detail.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+    </div>
+    
+    <h2 class="section-title">运维与库存管理界面</h2>
+    
+    <div class="prototype-container">
+        <!-- 原料库存 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">原料库存</p>
+            <iframe src="pages/inventory.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 故障管理 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">故障管理</p>
+            <iframe src="pages/maintenance.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 远程诊断 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">远程诊断</p>
+            <iframe src="pages/remote_diagnosis.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 运维人员 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">运维人员管理</p>
+            <iframe src="pages/staff.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+    </div>
+    
+    <h2 class="section-title">数据分析与用户管理界面</h2>
+    
+    <div class="prototype-container">
+        <!-- 数据统计 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">数据统计</p>
+            <iframe src="pages/statistics.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 销售趋势 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">销售趋势</p>
+            <iframe src="pages/sales_trend.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 用户信息 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">用户信息</p>
+            <iframe src="pages/user_profile.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+        
+        <!-- 消息中心 -->
+        <div class="flex flex-col items-center">
+            <p class="iframe-label">消息中心</p>
+            <iframe src="pages/messages.html" frameborder="0" class="iphone-container"></iframe>
+        </div>
+    </div>
+    
+    <footer class="mt-12 text-center text-gray-600">
+        <p>智能奶茶机运维App原型 - 设计展示</p>
+        <p class="mt-2 text-sm">使用HTML + Tailwind CSS + FontAwesome构建</p>
+    </footer>
+</body>
+</html> 

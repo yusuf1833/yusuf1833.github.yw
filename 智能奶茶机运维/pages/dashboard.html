@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主控制面板 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="bg-white p-4 shadow-sm">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold">控制面板</h1>
+                <a href="user_profile.html" class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-user text-gray-600"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 设备状态概览 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">设备状态</h2>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-green-100">
+                            <i class="fas fa-check text-green-500"></i>
+                        </div>
+                        <div class="stat-card-value text-green-500">12</div>
+                        <p class="text-gray-600 text-sm">正常运行</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-yellow-100">
+                            <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                        </div>
+                        <div class="stat-card-value text-yellow-500">3</div>
+                        <p class="text-gray-600 text-sm">需要关注</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-red-100">
+                            <i class="fas fa-times text-red-500"></i>
+                        </div>
+                        <div class="stat-card-value text-red-500">1</div>
+                        <p class="text-gray-600 text-sm">故障设备</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 库存预警 -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">库存预警</h2>
+                    <a href="inventory.html" class="text-blue-500 text-sm">查看全部</a>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <i class="fas fa-leaf text-green-500 mr-2"></i>
+                            <h3 class="font-medium">茉莉茶叶</h3>
+                        </div>
+                        <span class="status-badge status-warning">低库存</span>
+                    </div>
+                    
+                    <div class="progress-bar mb-1">
+                        <div class="progress-fill progress-low" style="width: 15%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>库存：1.5kg</span>
+                        <span>建议补货：8.5kg</span>
+                    </div>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <i class="fas fa-tint text-blue-500 mr-2"></i>
+                            <h3 class="font-medium">牛奶</h3>
+                        </div>
+                        <span class="status-badge status-warning">低库存</span>
+                    </div>
+                    
+                    <div class="progress-bar mb-1">
+                        <div class="progress-fill progress-medium" style="width: 25%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>库存：2.5L</span>
+                        <span>建议补货：7.5L</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 最近故障 -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">最近故障</h2>
+                    <a href="maintenance.html" class="text-blue-500 text-sm">查看全部</a>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <h3 class="font-medium">蒸汽压力异常</h3>
+                                <span class="ml-2 text-sm text-red-500 font-medium">紧急</span>
+                            </div>
+                            <p class="text-sm text-gray-500">设备：奶茶机 #A12345</p>
+                        </div>
+                        <span class="text-xs text-gray-400">10分钟前</span>
+                    </div>
+                    
+                    <div class="flex justify-end mt-3">
+                        <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm mr-2">
+                            忽略
+                        </button>
+                        <button class="px-3 py-1 bg-blue-500 text-white rounded-md text-sm" onclick="location.href='remote_diagnosis.html'">
+                            处理
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 快捷功能 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">快捷功能</h2>
+                <div class="grid grid-cols-4 gap-3">
+                    <a href="device_list.html" class="flex flex-col items-center">
+                        <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center mb-1">
+                            <i class="fas fa-coffee text-indigo-500 text-xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">设备管理</span>
+                    </a>
+                    
+                    <a href="inventory.html" class="flex flex-col items-center">
+                        <div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mb-1">
+                            <i class="fas fa-boxes text-green-500 text-xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">库存管理</span>
+                    </a>
+                    
+                    <a href="maintenance.html" class="flex flex-col items-center">
+                        <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mb-1">
+                            <i class="fas fa-tools text-red-500 text-xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">运维管理</span>
+                    </a>
+                    
+                    <a href="statistics.html" class="flex flex-col items-center">
+                        <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-1">
+                            <i class="fas fa-chart-line text-blue-500 text-xl"></i>
+                        </div>
+                        <span class="text-xs text-gray-600">数据分析</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="bottom-nav">
+            <a href="dashboard.html" class="flex flex-col items-center">
+                <i class="fas fa-home text-blue-500 text-xl"></i>
+                <span class="text-xs mt-1 text-blue-500">首页</span>
+            </a>
+            
+            <a href="device_list.html" class="flex flex-col items-center">
+                <i class="fas fa-coffee text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">设备</span>
+            </a>
+            
+            <a href="maintenance.html" class="flex flex-col items-center">
+                <i class="fas fa-tools text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">运维</span>
+            </a>
+            
+            <a href="messages.html" class="flex flex-col items-center">
+                <i class="fas fa-bell text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">消息</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

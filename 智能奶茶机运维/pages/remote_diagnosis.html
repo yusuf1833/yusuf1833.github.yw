@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>远程诊断 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        
+        .device-schema {
+            width: 100%;
+            height: 180px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .parameter-item {
+            padding: 12px;
+            border-radius: 10px;
+            background-color: white;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .error-parameter {
+            border-left: 4px solid #FF3B30;
+        }
+        
+        .warning-parameter {
+            border-left: 4px solid #FFCC00;
+        }
+        
+        .normal-parameter {
+            border-left: 4px solid #34C759;
+        }
+        
+        .diagnostic-log {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+            font-size: 12px;
+            overflow-y: auto;
+            max-height: 200px;
+            line-height: 1.6;
+        }
+        
+        .log-success {
+            color: #34C759;
+        }
+        
+        .log-warning {
+            color: #FFCC00;
+        }
+        
+        .log-error {
+            color: #FF3B30;
+        }
+        
+        .log-info {
+            color: #5AC8FA;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-button {
+            font-weight: 500;
+            color: #6B7280;
+            padding: 0.75rem 0;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: #3B82F6;
+            border-bottom: 2px solid #3B82F6;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="bg-white p-4 shadow-sm">
+            <div class="flex items-center">
+                <a href="maintenance.html" class="mr-3">
+                    <i class="fas fa-chevron-left text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-bold">远程诊断</h1>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 设备信息 -->
+            <div class="bg-white rounded-lg p-4 mb-5 shadow-sm">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-lg font-semibold">奶茶机 #A12345</h2>
+                        <p class="text-sm text-gray-500">一楼前厅 · 标准型</p>
+                    </div>
+                    <span class="status-badge status-error">故障</span>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-red-500 font-medium">蒸汽压力异常，建议检查</p>
+                        <p class="text-xs text-gray-500">上报时间：2023-03-21 09:32</p>
+                    </div>
+                    <a href="device_detail.html" class="text-blue-500 text-sm">查看设备 <i class="fas fa-chevron-right ml-1 text-xs"></i></a>
+                </div>
+            </div>
+            
+            <!-- 标签切换 -->
+            <div class="bg-white rounded-lg shadow-sm mb-5">
+                <div class="flex border-b">
+                    <div class="w-1/3 tab-button active" data-tab="diagnosis">诊断</div>
+                    <div class="w-1/3 tab-button" data-tab="control">远程控制</div>
+                    <div class="w-1/3 tab-button" data-tab="guide">维修指南</div>
+                </div>
+                
+                <!-- 诊断标签页 -->
+                <div id="diagnosis-tab" class="tab-content active p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold">问题诊断</h3>
+                        <button class="px-3 py-1 rounded-md bg-blue-500 text-white text-sm">
+                            开始诊断
+                        </button>
+                    </div>
+                    
+                    <div class="device-schema mb-4">
+                        <img src="https://via.placeholder.com/320x180/f0f0f0/888888?text=设备示意图" alt="设备示意图" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <h3 class="font-semibold mb-3">参数异常</h3>
+                    
+                    <div class="parameter-item error-parameter">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-medium">蒸汽压力</h4>
+                                <p class="text-xs text-gray-500">蒸汽锅炉内部压力</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-red-500 font-semibold">1.8 MPa</p>
+                                <p class="text-xs text-gray-500">正常范围：0.8-1.2 MPa</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="parameter-item warning-parameter">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-medium">锅炉温度</h4>
+                                <p class="text-xs text-gray-500">锅炉内部水温</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-yellow-500 font-semibold">87°C</p>
+                                <p class="text-xs text-gray-500">正常范围：75-85°C</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="parameter-item normal-parameter">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h4 class="font-medium">水流量</h4>
+                                <p class="text-xs text-gray-500">主水管流量</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-green-500 font-semibold">1.5 L/min</p>
+                                <p class="text-xs text-gray-500">正常范围：1.0-2.0 L/min</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="font-semibold mt-5 mb-3">诊断日志</h3>
+                    
+                    <div class="diagnostic-log">
+                        <p class="log-info">[09:35:12] 开始远程诊断...</p>
+                        <p class="log-info">[09:35:13] 连接设备 #A12345 成功</p>
+                        <p class="log-info">[09:35:14] 获取设备状态参数</p>
+                        <p class="log-warning">[09:35:15] 警告：锅炉温度超出正常范围（87°C）</p>
+                        <p class="log-error">[09:35:16] 错误：蒸汽压力严重超出安全范围（1.8 MPa）</p>
+                        <p class="log-info">[09:35:17] 检查压力释放阀状态</p>
+                        <p class="log-error">[09:35:18] 错误：压力释放阀可能堵塞</p>
+                        <p class="log-info">[09:35:19] 检查加热系统控制回路</p>
+                        <p class="log-success">[09:35:20] 加热控制回路工作正常</p>
+                        <p class="log-info">[09:35:21] 诊断完成</p>
+                    </div>
+                    
+                    <div class="mt-4 bg-red-50 p-3 rounded-md border border-red-200">
+                        <h4 class="text-red-600 font-medium mb-1">诊断结果：压力释放阀可能堵塞</h4>
+                        <p class="text-sm text-gray-700">建议立即派人检查压力释放阀，并清理可能的堵塞物。此问题可能导致设备损坏或安全事故。</p>
+                    </div>
+                </div>
+                
+                <!-- 远程控制标签页 -->
+                <div id="control-tab" class="tab-content p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold">远程控制</h3>
+                        <span class="status-badge status-online">已连接</span>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h4 class="text-sm font-medium mb-2">紧急操作</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="py-3 bg-red-500 text-white rounded-md text-sm font-medium">
+                                <i class="fas fa-power-off mr-2"></i> 紧急关机
+                            </button>
+                            <button class="py-3 bg-yellow-500 text-white rounded-md text-sm font-medium">
+                                <i class="fas fa-exclamation-triangle mr-2"></i> 安全模式
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h4 class="text-sm font-medium mb-2">系统控制</h4>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="py-3 bg-gray-100 text-gray-700 rounded-md text-sm" disabled>
+                                <i class="fas fa-power-off mr-2"></i> 开/关机
+                            </button>
+                            <button class="py-3 bg-gray-100 text-gray-700 rounded-md text-sm" disabled>
+                                <i class="fas fa-sync-alt mr-2"></i> 重启系统
+                            </button>
+                            <button class="py-3 bg-blue-500 text-white rounded-md text-sm">
+                                <i class="fas fa-redo-alt mr-2"></i> 重置参数
+                            </button>
+                            <button class="py-3 bg-gray-100 text-gray-700 rounded-md text-sm" disabled>
+                                <i class="fas fa-sliders-h mr-2"></i> 高级设置
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h4 class="text-sm font-medium mb-2">压力控制</h4>
+                        <div class="parameter-item">
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="font-medium">手动释放压力</h5>
+                                <button class="px-3 py-1 bg-blue-500 text-white rounded-md text-xs">
+                                    激活
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500">警告：此操作将强制打开压力释放阀，可能会导致高温蒸汽释放。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h4 class="text-sm font-medium mb-2">操作日志</h4>
+                        <div class="diagnostic-log">
+                            <p class="log-info">[09:36:05] 远程连接建立成功</p>
+                            <p class="log-info">[09:36:10] 请求系统参数信息</p>
+                            <p class="log-info">[09:36:12] 参数获取成功</p>
+                            <p class="log-warning">[09:36:20] 警告：当前故障状态下，部分控制功能已被禁用</p>
+                            <p class="log-info">[09:36:25] 准备执行压力控制操作...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 维修指南标签页 -->
+                <div id="guide-tab" class="tab-content p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-semibold">维修指南</h3>
+                        <span class="text-xs text-gray-500">更新于：3天前</span>
+                    </div>
+                    
+                    <div class="bg-blue-50 p-3 rounded-md border border-blue-200 mb-4">
+                        <h4 class="text-blue-600 font-medium mb-1">安全警告</h4>
+                        <p class="text-sm text-gray-700">处理蒸汽压力问题时，请确保机器已完全冷却并断电。高温蒸汽可能导致严重烫伤。</p>
+                    </div>
+                    
+                    <h4 class="font-medium mt-5 mb-2">压力释放阀堵塞的处理步骤</h4>
+                    
+                    <div class="bg-white rounded-md border border-gray-200 mb-4">
+                        <div class="p-3 border-b border-gray-200">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                    <span class="text-blue-500 font-medium">1</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium mb-1">关闭电源并等待冷却</h5>
+                                    <p class="text-sm text-gray-600">完全断开设备电源并等待至少30分钟让设备冷却。确认锅炉温度已降至安全水平。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 border-b border-gray-200">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                    <span class="text-blue-500 font-medium">2</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium mb-1">定位压力释放阀</h5>
+                                    <p class="text-sm text-gray-600">打开机器顶部面板，找到位于锅炉顶部的铜色压力释放阀。参考下图位置。</p>
+                                    <div class="mt-2 mb-2 bg-gray-100 rounded-md p-2 flex justify-center">
+                                        <img src="https://via.placeholder.com/240x120/f0f0f0/888888?text=压力阀位置图" alt="压力阀位置图" class="rounded-md">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 border-b border-gray-200">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                    <span class="text-blue-500 font-medium">3</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium mb-1">拆卸压力阀</h5>
+                                    <p class="text-sm text-gray-600">使用17mm扳手逆时针旋转释放阀，注意可能有少量残留水流出。完全拆下阀门。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3 border-b border-gray-200">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                    <span class="text-blue-500 font-medium">4</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium mb-1">清洁阀门</h5>
+                                    <p class="text-sm text-gray-600">检查阀门内部和弹簧是否有水垢或杂质。使用小刷子和白醋清洁阀门内部。保持弹簧和密封垫完好。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-3">
+                            <div class="flex items-start">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                    <span class="text-blue-500 font-medium">5</span>
+                                </div>
+                                <div>
+                                    <h5 class="font-medium mb-1">重新安装并测试</h5>
+                                    <p class="text-sm text-gray-600">顺时针旋转重新安装阀门，确保紧固但不要过度拧紧。合上面板，重新启动设备并监控压力状态是否恢复正常。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 bg-yellow-50 p-3 rounded-md border border-yellow-200">
+                        <h4 class="text-yellow-600 font-medium mb-1">注意事项</h4>
+                        <p class="text-sm text-gray-700">如果清洁后问题仍然存在，可能需要更换整个压力释放阀组件。请联系技术支持获取更换部件。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 处理按钮 -->
+            <div class="mb-5">
+                <button class="form-button btn-primary mb-3">
+                    <i class="fas fa-check-circle mr-2"></i> 委派现场维修人员
+                </button>
+                
+                <div class="flex justify-between">
+                    <button class="w-1/2 mr-2 form-button btn-secondary">
+                        <i class="fas fa-file-alt mr-2"></i> 生成报告
+                    </button>
+                    <button class="w-1/2 ml-2 form-button btn-secondary">
+                        <i class="fas fa-question-circle mr-2"></i> 请求协助
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 简单的标签切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有标签页的active类
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 为当前点击的标签添加active类
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId + '-tab').classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

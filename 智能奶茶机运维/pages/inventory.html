@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原料库存 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        
+        .material-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="bg-white p-4 shadow-sm">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold">原料库存</h1>
+                <button class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                    <i class="fas fa-plus text-gray-600"></i>
+                </button>
+            </div>
+            
+            <!-- 搜索栏 -->
+            <div class="mt-4 relative">
+                <input type="text" class="w-full p-2 pl-10 rounded-lg border border-gray-200 focus:outline-none focus:border-blue-500" placeholder="搜索原料...">
+                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            </div>
+            
+            <!-- 过滤器 -->
+            <div class="flex overflow-x-auto py-3 -mx-4 px-4 space-x-2">
+                <button class="px-3 py-1 rounded-full bg-blue-500 text-white text-sm whitespace-nowrap">
+                    所有原料
+                </button>
+                <button class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm whitespace-nowrap">
+                    茶叶
+                </button>
+                <button class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm whitespace-nowrap">
+                    调味品
+                </button>
+                <button class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm whitespace-nowrap">
+                    添加物
+                </button>
+                <button class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-sm whitespace-nowrap">
+                    低库存
+                </button>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content">
+            <!-- 库存概况 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">库存概况</h2>
+                <div class="grid grid-cols-3 gap-3">
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-green-100">
+                            <i class="fas fa-check text-green-500"></i>
+                        </div>
+                        <div class="stat-card-value text-green-500">8</div>
+                        <p class="text-gray-600 text-sm">库存充足</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-yellow-100">
+                            <i class="fas fa-exclamation-triangle text-yellow-500"></i>
+                        </div>
+                        <div class="stat-card-value text-yellow-500">4</div>
+                        <p class="text-gray-600 text-sm">库存预警</p>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card-icon bg-red-100">
+                            <i class="fas fa-times text-red-500"></i>
+                        </div>
+                        <div class="stat-card-value text-red-500">2</div>
+                        <p class="text-gray-600 text-sm">库存不足</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 待处理预警 -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold mb-3">预警原料</h2>
+                
+                <div class="device-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="material-icon bg-green-100">
+                                <i class="fas fa-leaf text-green-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">茉莉茶叶</h3>
+                                <p class="text-xs text-gray-500">茶叶类</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-error">需补货</span>
+                    </div>
+                    
+                    <div class="progress-bar mb-1">
+                        <div class="progress-fill progress-low" style="width: 15%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between text-xs text-gray-500 mb-3">
+                        <span>当前：1.5kg</span>
+                        <span>安全库存：10kg</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2">
+                        <button class="bg-blue-100 text-blue-600 text-sm py-1 rounded-md">
+                            <i class="fas fa-plus mr-1"></i> 进货
+                        </button>
+                        <button class="bg-gray-100 text-gray-600 text-sm py-1 rounded-md">
+                            消耗记录
+                        </button>
+                        <button class="bg-gray-100 text-gray-600 text-sm py-1 rounded-md">
+                            更多 <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="material-icon bg-blue-100">
+                                <i class="fas fa-tint text-blue-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">牛奶</h3>
+                                <p class="text-xs text-gray-500">调味品类</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-warning">预警</span>
+                    </div>
+                    
+                    <div class="progress-bar mb-1">
+                        <div class="progress-fill progress-medium" style="width: 25%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between text-xs text-gray-500 mb-3">
+                        <span>当前：2.5L</span>
+                        <span>安全库存：10L</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2">
+                        <button class="bg-blue-100 text-blue-600 text-sm py-1 rounded-md">
+                            <i class="fas fa-plus mr-1"></i> 进货
+                        </button>
+                        <button class="bg-gray-100 text-gray-600 text-sm py-1 rounded-md">
+                            消耗记录
+                        </button>
+                        <button class="bg-gray-100 text-gray-600 text-sm py-1 rounded-md">
+                            更多 <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="material-icon bg-purple-100">
+                                <i class="fas fa-blender text-purple-500"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium">芋圆</h3>
+                                <p class="text-xs text-gray-500">添加物类</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-warning">预警</span>
+                    </div>
+                    
+                    <div class="progress-bar mb-1">
+                        <div class="progress-fill progress-medium" style="width: 30%"></div>
+                    </div>
+                    
+                    <div class="flex justify-between text-xs text-gray-500 mb-3">
+                        <span>当前：3kg</span>
+                        <span>安全库存：10kg</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-3 gap-2">
+                        <button class="bg-blue-100 text-blue-600 text-sm py-1 rounded-md">
+                            <i class="fas fa-plus mr-1"></i> 进货
+                        </button>
+                        <button class="bg-gray-100 text-gray-600 text-sm py-1 rounded-md">
+                            消耗记录
+                        </button>
+                        <button class="bg-gray-100 text-gray-600 text-sm py-1 rounded-md">
+                            更多 <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 最近进货记录 -->
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-lg font-semibold">最近进货记录</h2>
+                    <a href="#" class="text-blue-500 text-sm">查看全部</a>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <h3 class="font-medium">蔗糖</h3>
+                                <span class="ml-2 text-sm text-gray-500">+20kg</span>
+                            </div>
+                            <p class="text-sm text-gray-500">批次号：SG20230318</p>
+                        </div>
+                        <span class="text-xs text-gray-400">2023-03-18</span>
+                    </div>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <h3 class="font-medium">红豆</h3>
+                                <span class="ml-2 text-sm text-gray-500">+15kg</span>
+                            </div>
+                            <p class="text-sm text-gray-500">批次号：RB20230315</p>
+                        </div>
+                        <span class="text-xs text-gray-400">2023-03-15</span>
+                    </div>
+                </div>
+                
+                <div class="device-card">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <h3 class="font-medium">珍珠</h3>
+                                <span class="ml-2 text-sm text-gray-500">+10kg</span>
+                            </div>
+                            <p class="text-sm text-gray-500">批次号：PP20230312</p>
+                        </div>
+                        <span class="text-xs text-gray-400">2023-03-12</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 一键采购按钮 -->
+            <button class="form-button btn-primary mb-6">
+                <i class="fas fa-shopping-cart mr-2"></i> 一键采购所有低库存原料
+            </button>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="bottom-nav">
+            <a href="dashboard.html" class="flex flex-col items-center">
+                <i class="fas fa-home text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">首页</span>
+            </a>
+            
+            <a href="device_list.html" class="flex flex-col items-center">
+                <i class="fas fa-coffee text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">设备</span>
+            </a>
+            
+            <a href="maintenance.html" class="flex flex-col items-center">
+                <i class="fas fa-tools text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">运维</span>
+            </a>
+            
+            <a href="messages.html" class="flex flex-col items-center">
+                <i class="fas fa-bell text-gray-400 text-xl"></i>
+                <span class="text-xs mt-1 text-gray-400">消息</span>
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备详情 - 智能奶茶机运维</title>
+    <link rel="stylesheet" href="../css/tailwind.css">
+    <link rel="stylesheet" href="../css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background-color: #f7f7f7;
+        }
+        
+        .device-image {
+            width: 100%;
+            height: 180px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-button {
+            font-weight: 500;
+            color: #6B7280;
+            padding: 0.75rem 0;
+            text-align: center;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab-button.active {
+            color: #3B82F6;
+            border-bottom: 2px solid #3B82F6;
+        }
+    </style>
+</head>
+<body>
+    <div class="iphone-container mx-auto">
+        <!-- iOS状态栏 -->
+        <div class="ios-status-bar">
+            <div class="flex items-center">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-signal"></i>
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-battery-full"></i>
+            </div>
+        </div>
+        
+        <!-- 页面标题 -->
+        <div class="bg-white p-4 shadow-sm">
+            <div class="flex items-center">
+                <a href="device_list.html" class="mr-3">
+                    <i class="fas fa-chevron-left text-gray-600"></i>
+                </a>
+                <h1 class="text-xl font-bold">设备详情</h1>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="page-content" style="padding-bottom: 83px;">
+            <!-- 设备基本信息 -->
+            <div class="bg-white rounded-lg overflow-hidden mb-5 shadow-sm">
+                <div class="device-image">
+                    <img src="https://images.unsplash.com/photo-1606509036992-4399d5c5afe4?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="奶茶机" class="w-full h-full object-cover">
+                    <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-20 flex items-center justify-center">
+                        <div class="text-center">
+                            <h2 class="text-white text-2xl font-bold shadow-text">奶茶机 #A12345</h2>
+                            <p class="text-white text-sm mt-1">标准型 · 一楼前厅</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <div class="flex justify-between items-center mb-3">
+                        <div>
+                            <div class="flex items-center">
+                                <h3 class="font-semibold">设备状态</h3>
+                                <span class="status-badge status-error ml-2">故障</span>
+                            </div>
+                            <p class="text-sm text-red-500">蒸汽压力异常，建议检查</p>
+                        </div>
+                        <div>
+                            <button class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm">远程控制</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <p class="text-xs text-gray-500">设备型号</p>
+                            <p class="text-sm font-medium">MT-2023-标准版</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">固件版本</p>
+                            <p class="text-sm font-medium">v2.1.3</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">累计使用时长</p>
+                            <p class="text-sm font-medium">128小时</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">最近维护</p>
+                            <p class="text-sm font-medium">2023-03-12</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 标签页 -->
+            <div class="bg-white rounded-lg overflow-hidden shadow-sm">
+                <div class="flex border-b">
+                    <div class="w-1/3 tab-button active" data-tab="status">运行状态</div>
+                    <div class="w-1/3 tab-button" data-tab="materials">原料状态</div>
+                    <div class="w-1/3 tab-button" data-tab="records">运维记录</div>
+                </div>
+                
+                <!-- 运行状态标签页 -->
+                <div id="status-tab" class="tab-content active p-4">
+                    <div class="mb-5">
+                        <h3 class="text-sm font-semibold mb-2">温度状态</h3>
+                        <div class="chart-container">
+                            <div class="h-full flex items-center justify-center">
+                                <img src="https://via.placeholder.com/320x150/f0f0f0/888888?text=温度曲线图" alt="温度曲线图" class="max-w-full max-h-full">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 mt-2">
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500">当前温度</p>
+                                <p class="text-base font-semibold">87°C</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500">目标温度</p>
+                                <p class="text-base font-semibold">80°C</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500">温差</p>
+                                <p class="text-base font-semibold text-yellow-500">+7°C</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-5">
+                        <h3 class="text-sm font-semibold mb-2">压力状态</h3>
+                        <div class="chart-container">
+                            <div class="h-full flex items-center justify-center">
+                                <img src="https://via.placeholder.com/320x150/f0f0f0/888888?text=压力曲线图" alt="压力曲线图" class="max-w-full max-h-full">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-3 mt-2">
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500">当前压力</p>
+                                <p class="text-base font-semibold text-red-500">1.8MPa</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500">目标压力</p>
+                                <p class="text-base font-semibold">1.2MPa</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500">压差</p>
+                                <p class="text-base font-semibold text-red-500">+0.6MPa</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-semibold mb-2">其他参数</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-xs text-gray-500">水泵状态</p>
+                                <p class="text-sm font-medium">正常</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">电机状态</p>
+                                <p class="text-sm font-medium">正常</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">加热器状态</p>
+                                <p class="text-sm font-medium">正常</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">排水阀状态</p>
+                                <p class="text-sm font-medium">正常</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 原料状态标签页 -->
+                <div id="materials-tab" class="tab-content p-4">
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-leaf text-green-500 mr-2"></i>
+                                <h3 class="font-medium">茉莉茶叶</h3>
+                            </div>
+                            <span class="status-badge status-warning">低库存</span>
+                        </div>
+                        
+                        <div class="progress-bar mb-1">
+                            <div class="progress-fill progress-low" style="width: 15%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>库存：1.5kg</span>
+                            <span>建议补货：8.5kg</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-tint text-blue-500 mr-2"></i>
+                                <h3 class="font-medium">牛奶</h3>
+                            </div>
+                            <span class="status-badge status-warning">低库存</span>
+                        </div>
+                        
+                        <div class="progress-bar mb-1">
+                            <div class="progress-fill progress-medium" style="width: 25%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>库存：2.5L</span>
+                            <span>建议补货：7.5L</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-cookie text-yellow-500 mr-2"></i>
+                                <h3 class="font-medium">蔗糖</h3>
+                            </div>
+                            <span class="status-badge status-online">充足</span>
+                        </div>
+                        
+                        <div class="progress-bar mb-1">
+                            <div class="progress-fill progress-high" style="width: 65%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>库存：6.5kg</span>
+                            <span>建议补货：0kg</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-candy-cane text-red-500 mr-2"></i>
+                                <h3 class="font-medium">红豆</h3>
+                            </div>
+                            <span class="status-badge status-online">充足</span>
+                        </div>
+                        
+                        <div class="progress-bar mb-1">
+                            <div class="progress-fill progress-high" style="width: 75%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>库存：7.5kg</span>
+                            <span>建议补货：0kg</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center">
+                                <i class="fas fa-cheese text-yellow-600 mr-2"></i>
+                                <h3 class="font-medium">珍珠</h3>
+                            </div>
+                            <span class="status-badge status-online">充足</span>
+                        </div>
+                        
+                        <div class="progress-bar mb-1">
+                            <div class="progress-fill progress-high" style="width: 80%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between text-xs text-gray-500">
+                            <span>库存：8kg</span>
+                            <span>建议补货：0kg</span>
+                        </div>
+                    </div>
+                    
+                    <button class="form-button btn-primary mt-4">
+                        <i class="fas fa-cart-plus mr-2"></i> 一键补充所有低库存原料
+                    </button>
+                </div>
+                
+                <!-- 运维记录标签页 -->
+                <div id="records-tab" class="tab-content p-4">
+                    <div class="mb-4">
+                        <div class="device-card">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center mb-1">
+                                        <h3 class="font-medium">定期维护</h3>
+                                        <span class="ml-2 text-xs text-green-500 font-medium">已完成</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500">更换滤芯、清洗内部管道、校准参数</p>
+                                </div>
+                                <span class="text-xs text-gray-400">2023-03-12</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">维护人员：王工程师</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="device-card">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center mb-1">
+                                        <h3 class="font-medium">故障维修</h3>
+                                        <span class="ml-2 text-xs text-green-500 font-medium">已修复</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500">热水泵漏水，更换密封圈</p>
+                                </div>
+                                <span class="text-xs text-gray-400">2023-02-18</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">维护人员：李工程师</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="device-card">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center mb-1">
+                                        <h3 class="font-medium">固件升级</h3>
+                                        <span class="ml-2 text-xs text-green-500 font-medium">已完成</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500">升级到固件版本v2.1.3，优化温度控制算法</p>
+                                </div>
+                                <span class="text-xs text-gray-400">2023-01-25</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">远程升级</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <div class="device-card">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <div class="flex items-center mb-1">
+                                        <h3 class="font-medium">设备安装</h3>
+                                        <span class="ml-2 text-xs text-green-500 font-medium">已完成</span>
+                                    </div>
+                                    <p class="text-sm text-gray-500">新设备安装与调试</p>
+                                </div>
+                                <span class="text-xs text-gray-400">2023-01-05</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">维护人员：张工程师</p>
+                        </div>
+                    </div>
+                    
+                    <button class="form-button btn-secondary mt-4">
+                        <i class="fas fa-plus mr-2"></i> 添加维护记录
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部操作栏 -->
+        <div class="bottom-nav flex justify-around bg-white border-t border-gray-200">
+            <button class="flex flex-col items-center justify-center w-1/4">
+                <i class="fas fa-power-off text-xl text-gray-600"></i>
+                <span class="text-xs mt-1 text-gray-600">开关机</span>
+            </button>
+            
+            <button class="flex flex-col items-center justify-center w-1/4">
+                <i class="fas fa-cog text-xl text-gray-600"></i>
+                <span class="text-xs mt-1 text-gray-600">设置</span>
+            </button>
+            
+            <button class="flex flex-col items-center justify-center w-1/4">
+                <i class="fas fa-tools text-xl text-gray-600"></i>
+                <span class="text-xs mt-1 text-gray-600">诊断</span>
+            </button>
+            
+            <button class="flex flex-col items-center justify-center w-1/4">
+                <i class="fas fa-ellipsis-h text-xl text-gray-600"></i>
+                <span class="text-xs mt-1 text-gray-600">更多</span>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        // 简单的标签切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有标签页的active类
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // 为当前点击的标签添加active类
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId + '-tab').classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
